@@ -25,7 +25,7 @@ odoo.define('odoo_website_job_search.job_search', function (require) {
                 });
             },
             select:function(suggestion,term,item){
-                window.location.href= "/job/detail/"+term.item.id
+                window.location.href= "/jobs/detail/"+term.item.id
             },
             minLength: 1
         });
