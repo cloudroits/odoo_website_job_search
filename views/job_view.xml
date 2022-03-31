@@ -2,7 +2,7 @@
     <data>
         <template id="job_search" name="Job search">
             <form action="/jobs/search_content" method="post">
-                <div class="input-group" style="padding-top:15px;padding-left: 20%;padding-right:20%;">
+                <div class="input-group" style="padding-top:15px;padding-bottom:15px;padding-left: 20%;padding-right:20%;">
                     <input type="text" name="search" class="search_query" widget="auto_fill"
                            placeholder="Search for a job position" t-att-value="search" style="text-align:center;width:100%;border-radius:15px;"/>
                     <button type='submit' name="searching_jobs" class="btn btn-secondary oe_search_job"
