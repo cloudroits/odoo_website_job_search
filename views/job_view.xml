@@ -36,5 +36,12 @@
                 </div>
             </t>
         </template>
+        <template id="job_search_inherit" name="Job searchbox"
+                  customize_show="True" active="True" inherit_id="website_hr_recruitment.index">
+            <xpath expr="//div[@class='container oe_website_jobs']" position="before">
+                <t t-call="odoo_website_job_search.job_search">
+                </t>
+            </xpath>
+        </template>  
     </data>
 </odoo>
