@@ -55,7 +55,7 @@ class RecruitmentInherit(WebsiteHrRecruitment):
         if kwargs.get('search'):
             search_string = kwargs.get('search', None)
         domain += [('name', 'ilike', search_string)]
-        job_ids = Jobs.search(domain, order="is_published desc, no_of_recruitment desc").ids
+        job_ids = Jobs.search(domain, order="is_published desc, sequence, no_of_recruitment desc").ids
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
@@ -96,21 +96,25 @@ class RecruitmentInherit(WebsiteHrRecruitment):
             'department_id': department,
             'office_id': office_id,
         })
-
-    
-    @http.route('/job/search', csrf=False, type="http", methods=['POST', 'GET'], auth="public", website=True)
+@http.route('/job/search', csrf=False, type="http", methods=['POST', 'GET'], auth="public", website=True)
     def search_contents(self, **kw):
         """get search result for auto suggestions"""
-        strings = '%' + kw.get('name') + '%'
+        search_string = '%' + kw.get('name') + '%'
+        jobs_data =[]
+        jobs_obj =  request.env['hr.job']
         try:
             domain = [('website_published', '=', True)]
-            job = request.env['hr.job'].with_user(SUPERUSER_ID).search(domain)
-            sql = """select id as res_id, name as name, name as value from hr_job where name ILIKE '{}'"""
-            extra_query = ' and is_published = TRUE'
-            limit = " limit 15"
-            qry = sql + extra_query + limit
-            request.cr.execute(qry.format(strings, tuple(job and job.ids)))
-            name = request.cr.dictfetchall()
+            domain += [('name', 'ilike', search_string)]
+            job_ids = jobs_obj.search(domain, order="is_published desc, no_of_recruitment desc").ids
+            # Browse jobs as superuser, because address is restricted
+            jobs = jobs_obj.sudo().browse(job_ids)
+            for job in jobs:
+                data = {
+                    "name" : job.name,
+                    "value" : job.id,
+                }
+                jobs_data.append(data)
         except:
-            name = {'name': 'None', 'value': 'None'}
-        return json.dumps(name)
+            data = {'name': 'None', 'value': 'None'}
+            jobs_data.append(data)
+        return json.dumps(jobs_data)

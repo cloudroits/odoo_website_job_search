@@ -15,7 +15,7 @@ odoo.define('odoo_website_job_search.job_search', function (require) {
                         return {
                             label: item.name,
                             value: item.name,
-                            id: item.res_id,
+                            id: item.value,
                         }
                     }));
                 },
